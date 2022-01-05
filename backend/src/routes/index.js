@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.use("/employee", UserRouter);
 
-router.all("*", (_req, res) => {
+router.all("*", (req, res) => {
   res.status(404).send("Route not found");
 });
 

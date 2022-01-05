@@ -1,4 +1,5 @@
 import User from "../models/user";
+import logger from "../utils/logger";
 
 const getAllUser = async (req, res) => {
   try {
@@ -20,7 +21,7 @@ const getAllUser = async (req, res) => {
       totalPage: Math.ceil(userCount.count / limit),
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({ error: false, msg: "Server Error" });
   }
 };
@@ -28,25 +29,24 @@ const getAllUser = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const findUser = await User.findOne({ id: userId });
-    if (!findUser) {
+    const foundUser = await User.findOne({ id: userId });
+    if (!foundUser) {
       return res.status(404).json({ error: true, msg: "Not Found" });
     }
-    const user = await User.findByPK({ id: userId });
-    return res.status(200).json({ error: false, data: user });
+    
+    return res.status(200).json({ error: false, data: foundUser });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({ error: true, msg: "Server Error" });
   }
 };
 
 const addUser = async (req, res) => {
   try {
-    console.log(req.body);
     let { first_name, last_name, email } = req.body;
 
-    let user = await User.findOne({ where: { email: email } });
-    if (user) {
+    let existEmail = await User.findOne({ where: { email: email } });
+    if (existEmail) {
       return res.status(401).json({ error: true, msg: "E-mail already taken" });
     }
 
@@ -63,7 +63,7 @@ const addUser = async (req, res) => {
         data: newUser,
       });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.status(500).json({ error: true, msg: "Server Error" });
   }
 };
