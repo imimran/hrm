@@ -1,18 +1,20 @@
-import userController from "../controllers/userController";
+import UserController from "../controllers/userController";
 import express from "express";
 import file from "../middlewares/fileHandler";
 import inputValidator from "../middlewares/inputValidator";
 import { createUserSchema } from "../validators/userValidators";
+
 const router = express.Router();
 
-router.get("/all", userController.getAllUser);
-router.get("/get/:userId", userController.getUser);
+router.get("/all", UserController.getAllUser);
+router.get("/get/:userId", UserController.getUser);
 router.post(
   "/create",
   file.form,
   inputValidator(createUserSchema),
-  userController.addUser
+  UserController.addUser
 );
+router.post('/upload', file.uploadFile, UserController.csvUpload)
 
 
 export default router;

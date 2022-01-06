@@ -5,7 +5,7 @@ import moment from "moment";
 //configuring multer storage for images
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "upload/");
+    cb(null, "src/uploads/");
   },
   filename: (req, file, cb) => {
     const fileExt = path.extname(file.originalname);
@@ -21,31 +21,24 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-//Filtering images for every file Field
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/x-icon" ||
-    file.mimetype === "image/gif" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
+//Filtering csv  file 
+const csvFilter = (req, file, cb) => {
+  if (file.mimetype.includes("csv")) {
     cb(null, true);
   } else {
-    cb(null, false);
-    cb(new Error("Only .jpg, .png, .jpeg, x-icon or .gif formet allowed !"));
+    cb("Please upload only csv file.", false);
   }
 };
 
 const upload = multer({
   storage: fileStorage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 1000000 }, //1 MB //count as a byte
+  fileFilter: csvFilter,
+  limits: { fileSize: 1000000 }, 
 });
 
 const formOnly = multer();
 
-const uploadFile = upload.single("image");
+const uploadFile = upload.single("file");
 const form = formOnly.none();
 
 export default { uploadFile, form };
