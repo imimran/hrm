@@ -3,11 +3,15 @@ import Axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { apiBaseUrl } from "../config/apiConfig";
 import { useForm } from "react-hook-form";
+import { useAlert } from "react-alert";
+import { useNavigate } from "react-router-dom";
 
 function AddEmployeeScreen() {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const alert = useAlert();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -30,9 +34,21 @@ function AddEmployeeScreen() {
     })
       .then((response) => {
         console.log(response);
+        if (response && response.data && response.data.msg) {
+          alert.success(response.data.msg);
+        }
+        navigate("/employee-list");
       })
       .catch((error) => {
         console.log(error);
+        if (
+          error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.msg
+        ) {
+          alert.error(error.response.data.msg);
+        }
       });
   };
 
