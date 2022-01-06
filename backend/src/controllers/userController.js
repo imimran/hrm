@@ -2,6 +2,7 @@ import fs from "fs";
 import * as csv from "fast-csv";
 import User from "../models/user";
 import logger from "../utils/logger";
+import { Op } from "sequelize";
 
 const getAllUser = async (req, res) => {
   try {
@@ -143,9 +144,78 @@ const csvUpload = async (req, res) => {
   }
 };
 
+const searchEmployee = async (req, res) => {
+  try {
+    const keyword = req.query.keyword.toString();
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = parseInt(req.query.offset) || 0;
+
+    const employee = await User.findAll({
+      limit,
+      offset,
+      where: {
+        [Op.or]: [
+          {
+            first_name: { [Op.like]: "%" + keyword + "%" },
+          },
+          {
+            last_name: { [Op.like]: "%" + keyword + "%" },
+          },
+          {
+            email: { [Op.like]: "%" + keyword + "%" },
+          },
+        ],
+      },
+      order: [["ID", "DESC"]],
+    });
+
+    return res.status(200).json({
+      error: false,
+      query: req.query,
+      data: employee,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: true, msg: "Server error." });
+  }
+};
+
+const searchEmployeeCount = async (req, res) => {
+  try {
+    const keyword = req.query.keyword.toString();
+    let emoloyeeCount = await User.findAndCountAll({
+      where: {
+        [Op.or]: [
+          {
+            first_name: { [Op.like]: "%" + keyword + "%" },
+          },
+          {
+            last_name: { [Op.like]: "%" + keyword + "%" },
+          },
+          {
+            email: { [Op.like]: "%" + keyword + "%" },
+          },
+        ],
+      },
+      order: [["ID", "DESC"]],
+    });
+
+    return res.status(200).json({
+      error: false,
+      count: emoloyeeCount.count,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      msg: "Server error",
+    });
+  }
+};
+
 export default {
   getAllUser,
   getUser,
   addUser,
   csvUpload,
+  searchEmployee,
+  searchEmployeeCount,
 };
