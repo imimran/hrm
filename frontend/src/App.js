@@ -1,13 +1,21 @@
-
-import './App.css';
-import AddEmployeeScreen from './screens/AddEmployeeScreen';
-
-
+import "./App.css";
+import NavBar from "./components/NavBar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AddEmployeeScreen from "./screens/AddEmployeeScreen";
+import CSVUploadScreen from "./screens/CSVUploadScreen";
+import HomeScreen from "./screens/HomeScreen";
 function App() {
   return (
     <div className="App">
-      <AddEmployeeScreen/>
-      
+      <NavBar />
+      <Router>
+      <Routes>
+      <Route  path="/" element={<HomeScreen/>}/>
+        <Route path="/create-employee" element={<AddEmployeeScreen/>} />
+        <Route path="/upload-file" element={<CSVUploadScreen/>} />
+    
+       </Routes>
+      </Router>
     </div>
   );
 }
