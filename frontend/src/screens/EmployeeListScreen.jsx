@@ -44,7 +44,7 @@ function EmployeeListScreen() {
   };
 
   return (
-    <div className="container card card-body p-5 m-5 col-lg-6 mx-auto ">
+    <div className="container card card-body col-md-6 mx-auto ">
       <h5>Employee List:</h5>
       <br />
 
