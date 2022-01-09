@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
+// user validation
 export const createUserSchema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
   last_name: yup.string().required("Last Name is required"),

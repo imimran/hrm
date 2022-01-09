@@ -7,8 +7,11 @@ import path from 'path'
 
 const app = express();
 
+// middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+//handle cors issue
+app.use(cors());
 global.__basedir = __dirname ;
 //serve static files
 app.use(express.static(path.join(__dirname, '/uploads/')));
@@ -19,12 +22,12 @@ app.use(express.static(path.join(__dirname, '/uploads/')));
   logger.info("Database Connected!");
 })();
 
-app.use(cors());
-
+//hello routes
 app.get("/", (req, res) => {
   res.status(200).json({ error: false, msg: "Hello Imran" });
 });
 
+// define router
 app.use("/api/v1", router);
 
 export default app;

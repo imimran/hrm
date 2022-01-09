@@ -3,6 +3,7 @@ import UserRouter from "./userRoutes";
 
 const router = express.Router();
 
+// router called
 router.use("/employee", UserRouter);
 
 router.all("*", (req, res) => {

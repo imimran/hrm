@@ -4,6 +4,7 @@ import User from "../models/user";
 import logger from "../utils/logger";
 import { Op } from "sequelize";
 
+// return All users
 const getAllUser = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -29,9 +30,12 @@ const getAllUser = async (req, res) => {
   }
 };
 
+//get user by id
 const getUser = async (req, res) => {
   try {
     const userId = req.params.id;
+
+    //find user
     const foundUser = await User.findOne({ id: userId });
     if (!foundUser) {
       return res.status(404).json({ error: true, msg: "Not Found" });
@@ -44,10 +48,12 @@ const getUser = async (req, res) => {
   }
 };
 
+//create user
 const addUser = async (req, res) => {
   try {
     let { first_name, last_name, email } = req.body;
-
+    
+    //check existing email
     let existEmail = await User.findOne({ where: { email: email } });
     if (existEmail) {
       return res.status(401).json({ error: true, msg: "E-mail already taken" });
@@ -69,6 +75,8 @@ const addUser = async (req, res) => {
   }
 };
 
+
+// bulk user create from csv file
 const csvUpload = async (req, res) => {
   try {
     if (req.file == undefined) {
@@ -76,10 +84,10 @@ const csvUpload = async (req, res) => {
     }
 
     let users = [];
-    logger.info(" __basedir", __basedir);
+    // logger.info(" __basedir", __basedir);
     let path = __basedir + "/uploads/" + req.file.filename;
 
-    logger.info("path", path);
+    // logger.info("path", path);
 
     let emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     let successCount = 0;
@@ -144,6 +152,7 @@ const csvUpload = async (req, res) => {
   }
 };
 
+// search employee by keword
 const searchEmployee = async (req, res) => {
   try {
     const keyword = req.query.keyword.toString();
@@ -179,6 +188,7 @@ const searchEmployee = async (req, res) => {
   }
 };
 
+//total result by keyword 
 const searchEmployeeCount = async (req, res) => {
   try {
     const keyword = req.query.keyword.toString();

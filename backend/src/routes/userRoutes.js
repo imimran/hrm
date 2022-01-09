@@ -6,6 +6,7 @@ import { createUserSchema } from "../validators/userValidators";
 
 const router = express.Router();
 
+// all routes
 router.get("/all", UserController.getAllUser);
 router.get("/search", UserController.searchEmployee);
 router.get("/search/count", UserController.searchEmployeeCount);
